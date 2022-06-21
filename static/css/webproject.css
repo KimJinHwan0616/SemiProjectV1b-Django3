@@ -1,0 +1,5 @@
+a {font-weight: bold}
+a:link {text-decoration: none; color: black}
+a:visited {text-decoration: none; color: black}
+a:hover {text-decoration: underline; color: orange}
+a:active { text-decoration: underline; color: orange}
