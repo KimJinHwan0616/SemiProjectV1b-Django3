@@ -1,10 +1,69 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'layout/base.html' %}
 
-</body>
-</html>
+{% block title %}board/view{% endblock %}
+
+{% block style %}
+table { width: 60%; margin: 65px auto -10px;
+    /*border: 1px solid black;*/
+    border-collapse: collapse;
+    margin-bottom: 30px }
+th, td { /*border: 1px solid black;*/
+         padding: 15px }
+
+th:first-child { width: 15% }
+tr:nth-child(5) th { vertical-align: top }
+
+tr:nth-child(5) td { border:1px solid orange; vertical-align: top; }
+tr:nth-child(5) div { height: 300px; overflow: auto; padding: 5px }
+
+tr:nth-child(6) td { text-align: right }
+{% endblock %}
+
+{% block content %}
+<h2>게시판 본문글</h2>
+<table>
+    <tr><th>제목</th>
+        <td>{{ bd.title }}</td></tr>
+    <tr><th>작성자</th><td>{{ bd.member.userid }}</td></tr>
+    <tr><th>작성일</th><td>{{ bd.regdate|date:'Y-m-d H:i:s' }}</td></tr>
+    <tr><th>조회수</th><td>{{ bd.views }}</td></tr>
+    <tr><th>본문</th><td><div class="box">{{ bd.contents }}</div>
+    </td></tr>
+
+    <tr><td colspan="2">
+        <button type="button"
+                onclick="location.href='board.html'">목록으로 이동</button>
+        <button type="button"
+                onclick="location.href='write.html'">새글쓰기</button>
+        <button type="button" id="mdfbtn">수정하기</button>
+        <button type="button" id="rmvbtn">삭제하기</button></td></tr>
+</table>
+<form name="board">
+    <input type="hidden" name="bno" value="{{ bd.id }}">
+</form>
+
+{% endblock %}
+
+{% block jscript %}
+<script>
+    const contents = document.querySelector('.box');
+    const mdfbtn = document.querySelector('#mdfbtn');
+    const rmvbtn = document.querySelector('#rmvbtn');
+    const bno = document.board.bno.value;
+
+    rmvbtn.addEventListener('click', () => {
+        if (confirm('정말로 삭제하시겠습니까?')) {
+            location.href = '/remove?bno=' + bno;
+        }
+    })
+
+    mdfbtn.addEventListener('click', () => {
+        if (confirm('정말로 수정하시겠습니까?')) {
+            location.href = '/modify?bno=' + bno;
+    })
+
+    contents.setAttribute('style', 'white-space: pre;');
+</script>
+
+
+{% endblock %}

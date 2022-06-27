@@ -1,10 +1,99 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'layout/base.html' %}
 
-</body>
-</html>
+{% block title %}board/list{% endblock %}
+
+{% block style %}
+    /* 페이지네이션 가운데 정렬 */
+    #pgnav { text-align: center; margin-left: -100px }
+
+    /* 페이지네이션의 페이지항목 간격 재조정 */
+    #pgnav li { margin-left: 10px }
+
+    /* 페이지네이션의 현재 페이지에 대한 스타일 지정 */
+    .cpage { font-weight: bold; font-size: 50px;
+             color: red }
+
+    /* 게시판 목록 테이블 가운데 정렬 */
+    table { width: 60%; margin: 65px auto -10px;
+        /*border: 1px solid black;*/
+        border-collapse: collapse;
+        table-layout: fixed; }
+
+    th, td { border: 1px solid black;
+        padding: 10px; text-align: center }
+
+    td:nth-child(2) { white-space: nowrap;
+        overflow: hidden; text-overflow: ellipsis;
+        text-align: left }
+
+    td:nth-child(2) a:hover { color: crimson }
+    td:nth-child(2) a:active { color: crimson }
+
+    .btns { text-align: right; border-top: none;
+        border-left: none; border-right: none; }
+{% endblock %}
+
+{% block content %}
+<h2>게시판</h2>
+<table>
+    <colgroup><!-- 테이블 컬럼너비 지정 -->
+        <col style="width: 10%">
+        <col style="">
+        <col style="width: 15%">
+        <col style="width: 15%">
+        <col style="width: 10%">
+    </colgroup>
+
+    <tr><td colspan="5" class="btns">
+        <button type="button" onclick="location.href='/write'">
+            새글쓰기</button>
+        </td></tr>
+    <tr>
+        <th>번호</th><th>제목</th>
+        <th>작성자</th><th>작성일</th>
+        <th>조회</th>
+    </tr>
+
+    {#  #}
+    {% for b in bds %}
+    <tr>
+        <td>{{ b.id }}</td>
+        <td><a href="/view?bno={{ b.id }}">{{ b.title }}</a></td>
+        {#<td>{{ b.userid }}</td>#}
+        <td>{{ b.member.userid }}</td>
+        <td>{{ b.regdate|date:'Y-m-d' }}</td>
+        <td>{{ b.views }}</td>
+    </tr>
+    {% endfor %}
+
+</table>
+<ul id="pgnav">
+    <li>이전</li>
+    <li class="cpage">1</li><li>2</li>
+    <li>3</li><li>4</li>
+    <li>5</li><li>6</li>
+    <li>7</li><li>8</li>
+    <li>9</li><li>10</li>
+    <li>다음</li>
+</ul>
+{% endblock %}
+
+{% block jscript %}
+<script>
+    const bditems = document.getElementsByTagName('td');
+    const bdcnt = '{{ bds.count }}';
+
+    {#document.write(bdcnt, '<br>');#}
+    {#document.write(bditems.length, '<br>');#}
+    {#document.write(bditems[1].innerHTML, '<br>');#}
+    {#document.write(bditems[6].innerHTML, '<br>');#}
+    {#document.write(bditems[11].innerHTML, '<br>');#}
+    {#document.write(bditems[16].innerHTML, '<br>');#}
+
+    for(let i = bdcnt, pos = 1; i > 0; --i, pos = pos + 5) {
+        document.write(i, ' / ', pos, '<br>');
+        bditems[pos].innerHTML = i;
+    }
+
+</script>
+{% endblock %}
